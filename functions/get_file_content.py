@@ -1,12 +1,4 @@
 import os
-import sys
-
-""" current_dir = os.path.dirname(os.path.abspath(__file__))
-root_dir = os.path.dirname(current_dir)
-
-if root_dir not in sys.path:
-    sys.path.append(root_dir) """
-
 import config
 
 schema_get_file_content = {
@@ -15,6 +7,7 @@ schema_get_file_content = {
         "name": "get_file_content",
         "description": "Get content of a file in a specified directory relative to the working directory, with a maximum character limit of 10000",
         "parameters": {
+            "require": ["file_path"],
             "type": "object",
             "properties": {
                 "file_path": {

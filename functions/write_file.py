@@ -4,9 +4,10 @@ schema_write_file = {
     "type": "function",
     "function": {
         "name": "write_file",
-        "description": "Overwrite specific file relative to the working directory with arguments supplied in function and return the number of characters written to the file. If file doesn't exist, it is created. If parent directory does not exist, it is created ",
+        "description": "Overwrite or write to a specific file relative to the working directory with arguments supplied in function and return the number of characters written to the file. If file doesn't exist, it is created. If parent directory does not exist, it is created ",
         "parameters": {
             "type": "object",
+            "required": ["file_path", "content"],
             "properties": {
                 "file_path": {
                     "type": "string",

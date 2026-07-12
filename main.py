@@ -2,7 +2,9 @@ import os
 from dotenv import load_dotenv
 from openai import OpenAI
 import argparse
+import json
 from prompts import system_prompt
+from call_function import available_functions
 
 
 def chatWithAI():
@@ -30,16 +32,25 @@ def chatWithAI():
             }
         ]
 
-        response = client.chat.completions.create(model="openrouter/free", messages=messages)
+        response = client.chat.completions.create(
+            model="openrouter/free", 
+            messages=messages, 
+            tools=available_functions
+        )
         if response.usage is None:
             raise RuntimeError("No usage indicated! Check API parametres")
         prompt_tokens = response.usage.prompt_tokens
         response_tokens = response.usage.completion_tokens
+        message_tool_calls = response.choices[0].message.tool_calls
         if(args.verbose):
             print(f"User prompt: {args.user_prompt}")
             print(f"Prompt tokens: {prompt_tokens}")
             print(f"Response tokens: {response_tokens}")
             print(response.choices[0].message.content)
+        elif(message_tool_calls):
+            for tool_call in message_tool_calls:
+                function_args = json.loads(tool_call.function.arguments or "{}")
+                print(f"Calling function: {tool_call.function.name}({function_args})")
         else:
             print(response.choices[0].message.content)
     except Exception as e:
