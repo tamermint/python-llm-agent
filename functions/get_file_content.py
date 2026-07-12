@@ -9,6 +9,23 @@ if root_dir not in sys.path:
 
 import config
 
+schema_get_file_content = {
+    "type": "function",
+    "function": {
+        "name": "get_file_content",
+        "description": "Get content of a file in a specified directory relative to the working directory, with a maximum character limit of 10000",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "file_path": {
+                    "type": "string",
+                    "description": "The file to read from, relative to the working directory. If no file is provided, an error is thrown",
+                },
+            },
+        },
+    },
+}
+
 def get_file_content(working_directory: str, file_path: str) -> str:
     try:
         

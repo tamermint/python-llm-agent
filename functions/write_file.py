@@ -1,5 +1,26 @@
 import os
 
+schema_write_file = {
+    "type": "function",
+    "function": {
+        "name": "write_file",
+        "description": "Overwrite specific file relative to the working directory with arguments supplied in function and return the number of characters written to the file. If file doesn't exist, it is created. If parent directory does not exist, it is created ",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "file_path": {
+                    "type": "string",
+                    "description": "The file to be modified with the supplied argument",
+                },
+                "content": {
+                    "type": "string",
+                    "description": "The changes required to be written into the file_path"
+                }
+            },
+        },
+    },
+}
+
 def write_file(working_directory: str, file_path: str, content: str) -> str: 
     try:
         # Get the absolute path of the working directory
@@ -21,7 +42,7 @@ def write_file(working_directory: str, file_path: str, content: str) -> str:
 
         with open(target_file_path, "w") as f:
             f.write(content)
-            print(f'Successfully wrote to "{file_path}" ({len(content)} characters written)')
+            return f'Successfully wrote to "{file_path}" ({len(content)} characters written)'
     except Exception as e:
         return f'Error: {e}'
 
