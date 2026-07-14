@@ -5,7 +5,7 @@ schema_get_file_content = {
     "type": "function",
     "function": {
         "name": "get_file_content",
-        "description": "Get content of a file in a specified directory relative to the working directory, with a maximum character limit of 10000",
+        "description": "Get/Read contents of a file in a specified directory relative to the working directory, with a maximum character limit of 10000",
         "parameters": {
             "require": ["file_path"],
             "type": "object",

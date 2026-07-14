@@ -2,12 +2,11 @@ import os
 from dotenv import load_dotenv
 from openai import OpenAI
 import argparse
-import json
 from prompts import system_prompt
-from call_function import available_functions
+from call_function import available_functions, call_function
 
 
-def chatWithAI():
+def chat_with_ai():
     try:
         load_dotenv()
         api_key = os.environ.get("OPENROUTER_API_KEY")
@@ -46,18 +45,30 @@ def chatWithAI():
             print(f"User prompt: {args.user_prompt}")
             print(f"Prompt tokens: {prompt_tokens}")
             print(f"Response tokens: {response_tokens}")
-            print(response.choices[0].message.content)
-        elif(message_tool_calls):
-            for tool_call in message_tool_calls:
-                function_args = json.loads(tool_call.function.arguments or "{}")
-                print(f"Calling function: {tool_call.function.name}({function_args})")
+            if(message_tool_calls):
+                for tool_call in message_tool_calls:
+                    result_message = call_function(tool_call, args.verbose)
+                    if(not result_message["content"]):
+                        raise Exception("No content returned!")
+                    else:
+                        print(f"-> {result_message['content']}")
+            else:
+                print(response.choices[0].message.content)
         else:
-            print(response.choices[0].message.content)
+            if(message_tool_calls):
+                for tool_call in message_tool_calls:
+                    result_message = call_function(tool_call)
+                    if(not result_message["content"]):
+                        raise Exception("No content returned!")
+                    else:
+                        print(result_message["content"])
+            else:
+                print(response.choices[0].message.content)
     except Exception as e:
-        print(f"Unknown error occured: {e}")
+        print(f"Unknown error occurred: {e}")
 
 
 def main():
-    chatWithAI()
+    chat_with_ai()
 if __name__ == "__main__":
     main()
